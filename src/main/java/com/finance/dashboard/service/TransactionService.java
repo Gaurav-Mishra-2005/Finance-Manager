@@ -48,8 +48,13 @@ public class TransactionService {
 
     public List<TransactionResponseDto> getTransactions(String username, LocalDate startDate, LocalDate endDate, Long categoryId) {
         User user = getUser(username);
-        return transactionRepository.findFilteredTransactionsForUser(user, startDate, endDate, categoryId)
-                .stream()
+        
+        List<Transaction> transactions = transactionRepository.findFilteredTransactionsForUser(user, startDate, endDate, categoryId);
+        
+        return transactions.stream()
+                .filter(t -> startDate == null || !t.getDate().isBefore(startDate))
+                .filter(t -> endDate == null || !t.getDate().isAfter(endDate))
+                .filter(t -> categoryId == null || t.getCategory().getId().equals(categoryId))
                 .map(this::mapToResponse)
                 .collect(Collectors.toList());
     }

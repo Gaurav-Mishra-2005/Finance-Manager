@@ -60,7 +60,7 @@ public class CategoryService {
         User user = getUser(username);
 
         if (categoryRepository.findByNameAndAvailableForUser(dto.getName(), user).isPresent()) {
-            throw new RuntimeException("Category already exists: " + dto.getName()); 
+            throw new com.finance.dashboard.exception.ConflictException("Category already exists: " + dto.getName()); 
         }
 
         Category category = new Category(dto.getName(), dto.getType(), true, user);
