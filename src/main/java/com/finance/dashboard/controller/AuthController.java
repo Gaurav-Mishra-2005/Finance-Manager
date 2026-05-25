@@ -47,17 +47,23 @@ public class AuthController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<Map<String, String>> loginUser(@Valid @RequestBody LoginDto dto) {
+    public ResponseEntity<Map<String, String>> loginUser(@Valid @RequestBody LoginDto dto, HttpServletRequest request) {
         Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(dto.getUsername(), dto.getPassword())
         );
 
         SecurityContextHolder.getContext().setAuthentication(authentication);
 
+        HttpSession session = request.getSession(true);
+        session.setAttribute(
+            org.springframework.security.web.context.HttpSessionSecurityContextRepository.SPRING_SECURITY_CONTEXT_KEY, 
+            SecurityContextHolder.getContext()
+        );
+
         Map<String, String> response = new HashMap<>();
         response.put("message", "Login successful");
 
-        return ResponseEntity.ok(response); 
+        return ResponseEntity.ok(response);
     }
 
     @PostMapping("/logout")

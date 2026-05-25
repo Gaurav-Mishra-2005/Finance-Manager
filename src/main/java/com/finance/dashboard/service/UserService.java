@@ -21,7 +21,7 @@ public class UserService {
 
     public User registerUser(UserRegistrationDto dto) {
         if (userRepository.existsByUsername(dto.getUsername())) {
-            throw new RuntimeException("User already exists with email: " + dto.getUsername());
+            throw new com.finance.dashboard.exception.ConflictException("User already exists with email: " + dto.getUsername());
         }
 
         User user = new User();
