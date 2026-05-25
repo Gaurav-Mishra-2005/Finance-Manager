@@ -46,7 +46,7 @@ public class TransactionService {
         return mapToResponse(saved);
     }
 
-    public List<TransactionResponseDto> getTransactions(String username, LocalDate startDate, LocalDate endDate, Long categoryId) {
+    public List<TransactionResponseDto> getTransactions(String username, LocalDate startDate, LocalDate endDate, Long categoryId, String categoryName) {
         User user = getUser(username);
         
         List<Transaction> transactions = transactionRepository.findFilteredTransactionsForUser(user, startDate, endDate, categoryId);
@@ -55,6 +55,7 @@ public class TransactionService {
                 .filter(t -> startDate == null || !t.getDate().isBefore(startDate))
                 .filter(t -> endDate == null || !t.getDate().isAfter(endDate))
                 .filter(t -> categoryId == null || t.getCategory().getId().equals(categoryId))
+                .filter(t -> categoryName == null || t.getCategory().getName().equalsIgnoreCase(categoryName)) // Fallback applied
                 .map(this::mapToResponse)
                 .collect(Collectors.toList());
     }

@@ -52,7 +52,7 @@ public class CategoryService {
         User user = getUser(username);
         return categoryRepository.findAllAvailableForUser(user)
                 .stream()
-                .map(c -> new CategoryDto(c.getName(), c.getType(), c.isCustom()))
+                .map(c -> new CategoryDto(c.getId(), c.getName(), c.getType(), c.isCustom()))
                 .collect(Collectors.toList());
     }
 
@@ -66,7 +66,7 @@ public class CategoryService {
         Category category = new Category(dto.getName(), dto.getType(), true, user);
         Category saved = categoryRepository.save(category);
 
-        return new CategoryDto(saved.getName(), saved.getType(), saved.isCustom());
+        return new CategoryDto(saved.getId(), saved.getName(), saved.getType(), saved.isCustom());    
     }
 
     public void deleteCustomCategory(String name, String username) {

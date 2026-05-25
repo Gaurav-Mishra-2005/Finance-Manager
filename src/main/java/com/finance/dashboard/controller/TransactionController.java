@@ -51,15 +51,16 @@ public class TransactionController {
             @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
             @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate,
             @RequestParam(required = false) Long categoryId,
+            @RequestParam(required = false) String category, 
             Authentication authentication) {
         
         String username = authentication.getName();
-        List<TransactionResponseDto> transactions = transactionService.getTransactions(username, startDate, endDate, categoryId);
+        List<TransactionResponseDto> transactions = transactionService.getTransactions(username, startDate, endDate, categoryId, category);
         
         Map<String, List<TransactionResponseDto>> response = new HashMap<>();
         response.put("transactions", transactions);
         
-        return ResponseEntity.ok(response); 
+        return ResponseEntity.ok(response);
     }
 
     @PutMapping("/{id}")
