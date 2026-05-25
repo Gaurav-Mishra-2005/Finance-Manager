@@ -11,8 +11,8 @@ public class GoalResponseDto {
     private LocalDate targetDate;
     private LocalDate startDate;
     private BigDecimal currentProgress;
-    private BigDecimal progressPercentage;
     private BigDecimal remainingAmount;
+    private double progressPercentage;
 
     public GoalResponseDto(Long id, String goalName, BigDecimal targetAmount, LocalDate targetDate, 
                            LocalDate startDate, BigDecimal currentProgress) {
@@ -27,17 +27,14 @@ public class GoalResponseDto {
         this.remainingAmount = this.targetAmount.subtract(this.currentProgress).max(BigDecimal.ZERO);
         
         if (this.targetAmount.compareTo(BigDecimal.ZERO) > 0) {
-            this.progressPercentage = this.currentProgress
-                    .divide(this.targetAmount, 4, RoundingMode.HALF_UP)
-                    .multiply(new BigDecimal("100"))
-                    .setScale(2, RoundingMode.HALF_UP);
-            
-            if (this.progressPercentage.compareTo(new BigDecimal("100")) > 0) {
-                this.progressPercentage = new BigDecimal("100.00");
-            }
-        } else {
-            this.progressPercentage = BigDecimal.ZERO;
-        }
+        BigDecimal calc = this.currentProgress
+                .divide(this.targetAmount, 4, RoundingMode.HALF_UP)
+                .multiply(new BigDecimal("100"));
+        
+        this.progressPercentage = Math.min(calc.doubleValue(), 100.0);
+    } else {
+        this.progressPercentage = 0.0;
+    }
     }
 
     public Long getId() { return id; }
@@ -46,7 +43,7 @@ public class GoalResponseDto {
     public LocalDate getTargetDate() { return targetDate; }
     public LocalDate getStartDate() { return startDate; }
     public BigDecimal getCurrentProgress() { return currentProgress; }
-    public BigDecimal getProgressPercentage() { return progressPercentage; }
+    public double getProgressPercentage() { return progressPercentage; }
     public BigDecimal getRemainingAmount() { return remainingAmount; }
 
     public void setId(Long id) { this.id = id; }
@@ -55,7 +52,7 @@ public class GoalResponseDto {
     public void setTargetDate(LocalDate targetDate) { this.targetDate = targetDate; }
     public void setStartDate(LocalDate startDate) { this.startDate = startDate; }
     public void setCurrentProgress(BigDecimal currentProgress) { this.currentProgress = currentProgress; }
-    public void setProgressPercentage(BigDecimal progressPercentage) { this.progressPercentage = progressPercentage; }
+    public void setProgressPercentage(double progressPercentage) { this.progressPercentage = progressPercentage; }
     public void setRemainingAmount(BigDecimal remainingAmount) { this.remainingAmount = remainingAmount;}
     
 }

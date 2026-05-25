@@ -15,9 +15,9 @@ import com.finance.dashboard.entity.User;
 public interface TransactionRepository extends JpaRepository<Transaction, Long> {
 
     @Query("SELECT t FROM Transaction t WHERE t.user = :user " +
-           "AND (:startDate IS NULL OR t.date >= :startDate) " +
-           "AND (:endDate IS NULL OR t.date <= :endDate) " +
-           "AND (:categoryId IS NULL OR t.category.id = :categoryId) " +
+           "AND (cast(:startDate as date) IS NULL OR t.date >= :startDate) " +
+           "AND (cast(:endDate as date) IS NULL OR t.date <= :endDate) " +
+           "AND (cast(:categoryId as long) IS NULL OR t.category.id = :categoryId) " +
            "ORDER BY t.date DESC, t.id DESC")
     List<Transaction> findFilteredTransactionsForUser(
             @Param("user") User user,

@@ -76,7 +76,7 @@ public class CategoryService {
                 .orElseThrow(() -> new RuntimeException("Category not found: " + name)); 
 
         if (!category.isCustom()) {
-            throw new RuntimeException("Cannot delete default categories"); 
+            throw new com.finance.dashboard.exception.ForbiddenException("Cannot delete default categories"); 
         }
         if (transactionRepository.existsByCategory_NameAndUser(name, user)) {
             throw new ConflictException("Cannot delete category as it is currently referenced by one or more transactions");
